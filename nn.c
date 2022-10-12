@@ -4,11 +4,11 @@
 #include <time.h>
 
 #define numInputs 2
-#define numHiddenNodes 2
+#define numHiddenNodes 20
 #define numOutputs 1
 #define numTrainingSets 4
 #define lr 0.1
-#define epochs 10000
+#define epochs 500000
 
 double hiddenLayer[numHiddenNodes];
 double outputLayer[numOutputs];
