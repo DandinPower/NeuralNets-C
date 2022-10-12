@@ -4,9 +4,10 @@
 #include <time.h>
 #include <string.h>
 
-#define RELU 0
-#define SIGMOID 1
-#define SOFTMAX 2
+#define LINEAR 0
+#define RELU 1
+#define SIGMOID 2
+#define SOFTMAX 3
 
 typedef struct {
     int numInput;
@@ -24,6 +25,11 @@ typedef struct {
     node_t* nodes;
     int activation;
 }linearlayer_t;
+
+typedef struct {
+    int numLayer;
+    linearlayer_t* layers;
+}network_t;
 
 double GetRandomWeight() { 
     return ((double)rand())/((double)RAND_MAX); 
@@ -79,18 +85,46 @@ void ResetLayerDelta(linearlayer_t *x){
     for (int i=0; i<x->numInput; i++) x->delta[i] = 0; 
 }
 
+void InitLayerNode(linearlayer_t *x){
+    x->nodes = (node_t*)malloc(sizeof(node_t)* x->numInput);
+}
+
+void ResetLayerNode(linearlayer_t *x){
+    node_t temp = GetNewNode(x->numInput);
+    x->nodes[0] = temp;
+    /*
+    for (int i=0; i<x->numInput; i++) {
+        x->nodes[i] = GetNewNode(x->numInput);
+    }*/
+}
+
+linearlayer_t GetNewLayer(int numInput, int numOutput, int activation){
+    linearlayer_t newLayer;
+    newLayer.numInput = numInput;
+    newLayer.numOutput = numOutput;
+    newLayer.activation = activation;
+    InitLayerDelta(&newLayer);
+    ResetLayerDelta(&newLayer);
+    ResetLayerNode(&newLayer);
+    return newLayer;
+}
+
+void InitNetwork(network_t *x){
+    x->layers = (linearlayer_t*)malloc(sizeof(linearlayer_t)* x->numLayer);
+}
+
+void AddLayer(network_t *x, int index, int numInput, int numOutput, int activation){
+    linearlayer_t temp = GetNewLayer(numInput, numOutput, activation);
+    x->layers[index] = temp;
+}
 
 int main(){
-    /*
-    linearlayer_t a;
-    a.numInput = 3;
-    a.numOutput = 5;
-    a.activation = RELU;
-    */
-    node_t a;
-    a.numInput = 10;
-    InitDelta(&a);
-    ResetDelta(&a);
-
+    network_t dnn;
+    dnn.numLayer = 3;
+    InitNetwork(&dnn);
+    //AddLayer(&dnn, 0, 2, 3, RELU);
+    //AddLayer(&dnn, 1, 3, 3, RELU);
+    //AddLayer(&dnn, 2, 3, 2, LINEAR);
+    linearlayer_t temp = GetNewLayer(2, 3, RELU);
     return 0;
 }
