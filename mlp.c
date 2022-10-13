@@ -4,16 +4,16 @@
 #include <time.h>
 #include <string.h>
 
-#define LEARNING_RATE 0.15
-#define EPOCHS 500000
+#define LEARNING_RATE 0.1
+#define EPOCHS 10000
 
-#define DENSE_1_INPUT 2
-#define DENSE_1_OUTPUT 10
-#define DENSE_2_INPUT 10
-#define DENSE_2_OUTPUT 5
-#define DENSE_3_INPUT 5
-#define DENSE_3_OUTPUT 1
-#define numTrainingSets 4
+#define DENSE_1_INPUT 768
+#define DENSE_1_OUTPUT 256
+#define DENSE_2_INPUT 256
+#define DENSE_2_OUTPUT 64
+#define DENSE_3_INPUT 64
+#define DENSE_3_OUTPUT 10
+#define numTrainingSets 60000
 
 double dense_1_Bias[DENSE_1_OUTPUT];
 double dense_2_Bias[DENSE_2_OUTPUT];
@@ -28,8 +28,12 @@ double delta_1[DENSE_1_INPUT];
 double delta_2[DENSE_2_INPUT];
 double delta_3[DENSE_3_INPUT];
 
-double training_inputs[numTrainingSets][DENSE_1_INPUT] = { {0.0f,0.0f},{1.0f,0.0f},{0.0f,1.0f},{1.0f,1.0f} };
-double training_outputs[numTrainingSets][DENSE_3_OUTPUT] = { {0.0f},{1.0f},{1.0f},{0.0f} };
+double training_inputs[numTrainingSets][DENSE_1_INPUT];
+double training_outputs[numTrainingSets][DENSE_3_OUTPUT];
+
+void ReadTrain(){
+    
+}
 
 //陣列打亂
 void shuffle(int arr[], int size){
