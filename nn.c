@@ -8,7 +8,7 @@
 #define numOutputs 1
 #define numTrainingSets 4
 #define lr 0.1
-#define epochs 500000
+#define epochs 3000000
 
 double hiddenLayer[numHiddenNodes];
 double outputLayer[numOutputs];
@@ -94,6 +94,7 @@ int main(){
         // As per SGD, shuffle the order of the training set
         int trainingSetOrder[] = {0,1,2,3};
         shuffle(trainingSetOrder,numTrainingSets);
+        double loss = 0.0f;
         // Cycle through each of the training set elements
         for (int x=0; x<numTrainingSets; x++) {
             int i = trainingSetOrder[x];
@@ -117,6 +118,7 @@ int main(){
             double deltaOutput[numOutputs];
             for (int j=0; j<numOutputs; j++) {
                 double dError = (training_outputs[i][j]-outputLayer[j]);
+                loss += dError;
                 deltaOutput[j] = dError*dSigmoid(outputLayer[j]);
             }
             // Compute change in hidden weights
@@ -143,6 +145,7 @@ int main(){
                 }
             } 
         }
+        printf("%f\n",loss);
     }
     inference();
     return 0;
