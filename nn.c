@@ -135,6 +135,13 @@ int main(){
                     outputWeights[k][j]+=hiddenLayer[k]*deltaOutput[j]*lr;
                 }
             } 
+            // Apply change in output weights
+            for (int j=0; j<numOutputs; j++) {
+                hiddenLayerBias[j] += deltaHidden[j]*lr;
+                for (int k=0; k<numHiddenNodes; k++) {
+                    hiddenWeights[k][j]+=training_inputs[i][k]*deltaHidden[j]*lr;
+                }
+            } 
         }
     }
     inference();

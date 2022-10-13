@@ -26,11 +26,6 @@ typedef struct {
     int activation;
 }linearlayer_t;
 
-typedef struct {
-    int numLayer;
-    linearlayer_t* layers;
-}network_t;
-
 double GetRandomWeight() { 
     return ((double)rand())/((double)RAND_MAX); 
 }
@@ -90,12 +85,9 @@ void InitLayerNode(linearlayer_t *x){
 }
 
 void ResetLayerNode(linearlayer_t *x){
-    node_t temp = GetNewNode(x->numInput);
-    x->nodes[0] = temp;
-    /*
     for (int i=0; i<x->numInput; i++) {
         x->nodes[i] = GetNewNode(x->numInput);
-    }*/
+    }
 }
 
 linearlayer_t GetNewLayer(int numInput, int numOutput, int activation){
@@ -109,22 +101,7 @@ linearlayer_t GetNewLayer(int numInput, int numOutput, int activation){
     return newLayer;
 }
 
-void InitNetwork(network_t *x){
-    x->layers = (linearlayer_t*)malloc(sizeof(linearlayer_t)* x->numLayer);
-}
-
-void AddLayer(network_t *x, int index, int numInput, int numOutput, int activation){
-    linearlayer_t temp = GetNewLayer(numInput, numOutput, activation);
-    x->layers[index] = temp;
-}
-
 int main(){
-    network_t dnn;
-    dnn.numLayer = 3;
-    InitNetwork(&dnn);
-    //AddLayer(&dnn, 0, 2, 3, RELU);
-    //AddLayer(&dnn, 1, 3, 3, RELU);
-    //AddLayer(&dnn, 2, 3, 2, LINEAR);
-    linearlayer_t temp = GetNewLayer(2, 3, RELU);
+    linearlayer_t dense_1 = GetNewLayer(2, 3, RELU);
     return 0;
 }
