@@ -4,14 +4,14 @@
 #include <time.h>
 #include <string.h>
 
-#define LEARNING_RATE 0.1
-#define EPOCHS 10000
+#define LEARNING_RATE 0.15
+#define EPOCHS 500000
 
 #define DENSE_1_INPUT 2
-#define DENSE_1_OUTPUT 4
-#define DENSE_2_INPUT 4
-#define DENSE_2_OUTPUT 2
-#define DENSE_3_INPUT 2
+#define DENSE_1_OUTPUT 10
+#define DENSE_2_INPUT 10
+#define DENSE_2_OUTPUT 5
+#define DENSE_3_INPUT 5
 #define DENSE_3_OUTPUT 1
 #define numTrainingSets 4
 
@@ -133,7 +133,7 @@ void Training(){
         for (int j=0; j<DENSE_2_OUTPUT; j++) {
             double activation=dense_2_Bias[j];
             for (int k=0; k<DENSE_2_INPUT; k++) {
-                activation += training_inputs[i][k] * dense_2_Weights[k][j];
+                activation += dense_1_output[k] * dense_2_Weights[k][j];
             }
             dense_2_output[j] = relu(activation);
         }
@@ -141,7 +141,7 @@ void Training(){
         for (int j=0; j<DENSE_3_OUTPUT; j++) {
             double activation=dense_3_Bias[j];
             for (int k=0; k<DENSE_3_INPUT; k++) {
-                activation += training_inputs[i][k] * dense_3_Weights[k][j];
+                activation += dense_2_output[k] * dense_3_Weights[k][j];
             }
             dense_3_output[j] = sigmoid(activation);
         }
@@ -196,7 +196,7 @@ void Training(){
 }
 
 int main(void){
-    /*
+    
     InitDense1Layer();
     InitDense2Layer();
     InitDense3Layer();
@@ -204,7 +204,7 @@ int main(void){
         Training();
     }
     inference();
-    */
+    
    
     return 0;
 }
