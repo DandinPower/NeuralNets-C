@@ -4,11 +4,11 @@
 #include <time.h>
 
 #define numInputs 2
-#define numHiddenNodes 20
+#define numHiddenNodes 2
 #define numOutputs 1
 #define numTrainingSets 4
 #define lr 0.1
-#define epochs 3000000
+#define epochs 1000000
 
 double hiddenLayer[numHiddenNodes];
 double outputLayer[numOutputs];
@@ -145,7 +145,7 @@ int main(){
                 }
             } 
         }
-        printf("%f\n",loss);
+        //printf("%f\n",loss);
     }
     inference();
     return 0;
