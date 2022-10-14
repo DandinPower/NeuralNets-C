@@ -182,7 +182,10 @@ void Training(){
         //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
         double totalExponential = softmax(dense_3_output, DENSE_3_OUTPUT);
         //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
-        double loss = categoryCrossEntropy(training_outputs[i], dense_3_output, DENSE_3_OUTPUT);
+        double a[4] = { 0.99, 0, 0.01,0};
+        double b[4] = {1, 0,0,0};
+        //double loss = categoryCrossEntropy(training_outputs[i], dense_3_output, DENSE_3_OUTPUT);
+        double loss = categoryCrossEntropy(b, a, 4);
         printf("%f\n",loss);
     }
     /*
