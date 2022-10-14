@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include <string.h>
+#include <time.h>
 
 //陣列打亂
 void shuffle(int arr[], int size){
@@ -18,5 +19,15 @@ void shuffle(int arr[], int size){
 
 //隨機產生 -1~1的weight
 double GetRandomWeight() { 
-    return ((double)rand())/((double)RAND_MAX); 
+    double sign;
+    if ((int)rand() % 2 == 1) sign = -1.0f;
+    else sign = 1.0f;
+    return sign * ((double)rand())/((double)RAND_MAX); 
+}
+
+//初始化訓練order
+void InitOrder(int arr[], int size){
+    for (int i=0; i < size; i++){
+        arr[i] = i;
+    }
 }

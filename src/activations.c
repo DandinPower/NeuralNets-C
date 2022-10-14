@@ -20,3 +20,18 @@ double dRelu(double x) {
     if (x > 0) return 1;
     else return 0;
 }
+
+//回傳totalexponent
+double softmax(double arr[], int size){
+    double totalExponential = 0;
+    double exponential[size];
+    for (int i=0; i < size; i++){
+        double expResult = exp(arr[i]);
+        exponential[i] = expResult;
+        totalExponential += expResult;
+    }
+    for (int i=0; i < size; i++){
+        arr[i] = exponential[i] / totalExponential;
+    }
+    return totalExponential;        
+}

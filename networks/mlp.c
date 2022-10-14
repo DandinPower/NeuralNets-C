@@ -32,6 +32,8 @@ double delta_3[DENSE_3_INPUT];
 
 double training_inputs[numTrainingSets][DENSE_1_INPUT];
 double training_outputs[numTrainingSets][DENSE_3_OUTPUT];
+int trainingSetOrder[numTrainingSets];
+    
 
 //載入訓練集
 void ReadMnistData(){
@@ -150,9 +152,37 @@ void inference(){
 
 //訓練epoch
 void Training(){
-    int trainingSetOrder[] = {0,1,2,3};
     shuffle(trainingSetOrder,numTrainingSets);
-    double loss = 0.0f;
+    for (int x=0; x<1; x++) {
+        int i = trainingSetOrder[x];
+        for (int j=0; j<DENSE_1_OUTPUT; j++) {
+            double activation=dense_1_Bias[j];
+            for (int k=0; k<DENSE_1_INPUT; k++) {
+                activation += training_inputs[i][k] * dense_1_Weights[k][j];
+            }
+            dense_1_output[j] = relu(activation);
+        }
+        //for (int z=0; z <DENSE_1_OUTPUT; z++) printf("%f,",dense_1_output[z]);
+        for (int j=0; j<DENSE_2_OUTPUT; j++) {
+            double activation=dense_2_Bias[j];
+            for (int k=0; k<DENSE_2_INPUT; k++) {
+                activation += dense_1_output[k] * dense_2_Weights[k][j];
+            }
+            dense_2_output[j] = relu(activation);
+        }
+        //for (int z=0; z <DENSE_2_OUTPUT; z++) printf("%f,",dense_2_output[z]);
+        for (int j=0; j<DENSE_3_OUTPUT; j++) {
+            double activation=dense_3_Bias[j];
+            for (int k=0; k<DENSE_3_INPUT; k++) {
+                activation += dense_2_output[k] * dense_3_Weights[k][j];
+            }
+            dense_3_output[j] = activation;
+        }
+        //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
+        double totalExponential = softmax(dense_3_output, DENSE_3_OUTPUT);
+        //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
+    }
+    /*
     for (int x=0; x<numTrainingSets; x++) {
         int i = trainingSetOrder[x];
         // Compute dense1 activation
@@ -183,7 +213,6 @@ void Training(){
         double delta_3[DENSE_3_OUTPUT];
         for (int j=0; j<DENSE_3_OUTPUT; j++) {
             double dError = (training_outputs[i][j] - dense_3_output[j]);
-            loss += dError;
             delta_3[j] = dError*dSigmoid(dense_3_output[j]);
         }
         // Compute change in hidden weights
@@ -227,13 +256,16 @@ void Training(){
         }
     }
     printf("%f\n",loss);
+    */
 }
 
 int main(void){
     ReadMnistData();
+    InitOrder(trainingSetOrder, numTrainingSets);
     InitDense1Layer();
     InitDense2Layer();
     InitDense3Layer();
+    Training();
     /*
     
     for (int i=0; i<EPOCHS; i++){

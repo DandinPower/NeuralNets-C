@@ -1,4 +1,5 @@
 #include "../src/activations.h"
+#include "../src/libs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -16,7 +17,7 @@ double training_outputs[numTrainingSets][DENSE_3_OUTPUT];
 
 #define N 5000
 int main() {
-    
+    printf("%f\n",GetRandomWeight());
 
     return 0;
 }

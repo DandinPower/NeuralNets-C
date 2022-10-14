@@ -5,5 +5,6 @@ double sigmoid(double x);
 double dSigmoid(double x);
 double relu(double x);
 double dRelu(double x);
+double softmax(double arr[], int size);
 
 #endif
