@@ -2,5 +2,5 @@
 #define LOSS_FUNCTION_H
 
 double categoryCrossEntropy(double target[], double output[], int size);
-double dCategoryCrossEntropy();
+void dCrossAndSoftmax(double delta[], double target[], double output[], int size);
 #endif

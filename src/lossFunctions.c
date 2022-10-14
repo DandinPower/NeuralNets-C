@@ -15,3 +15,7 @@ double categoryCrossEntropy(double target[], double output[], int size){
     }
     return 0 - result;
 }
+
+void dCrossAndSoftmax(double delta[], double target[], double output[], int size){
+    for (int i=0; i<size; i++) delta[i] = output[i] - target[i];
+}
