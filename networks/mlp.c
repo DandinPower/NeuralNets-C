@@ -1,5 +1,6 @@
 #include "../src/libs.h"
 #include "../src/activations.h"
+#include "../src/lossFunctions.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -181,34 +182,11 @@ void Training(){
         //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
         double totalExponential = softmax(dense_3_output, DENSE_3_OUTPUT);
         //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
+        double loss = categoryCrossEntropy(training_outputs[i], dense_3_output, DENSE_3_OUTPUT);
+        printf("%f\n",loss);
     }
     /*
-    for (int x=0; x<numTrainingSets; x++) {
-        int i = trainingSetOrder[x];
-        // Compute dense1 activation
-        for (int j=0; j<DENSE_1_OUTPUT; j++) {
-            double activation=dense_1_Bias[j];
-            for (int k=0; k<DENSE_1_INPUT; k++) {
-                activation += training_inputs[i][k] * dense_1_Weights[k][j];
-            }
-            dense_1_output[j] = relu(activation);
-        }
-        // Compute dense2 activation
-        for (int j=0; j<DENSE_2_OUTPUT; j++) {
-            double activation=dense_2_Bias[j];
-            for (int k=0; k<DENSE_2_INPUT; k++) {
-                activation += dense_1_output[k] * dense_2_Weights[k][j];
-            }
-            dense_2_output[j] = relu(activation);
-        }
-        // Compute dense3 activation
-        for (int j=0; j<DENSE_3_OUTPUT; j++) {
-            double activation=dense_3_Bias[j];
-            for (int k=0; k<DENSE_3_INPUT; k++) {
-                activation += dense_2_output[k] * dense_3_Weights[k][j];
-            }
-            dense_3_output[j] = sigmoid(activation);
-        }
+    
         // Compute change in dense_3 
         double delta_3[DENSE_3_OUTPUT];
         for (int j=0; j<DENSE_3_OUTPUT; j++) {
