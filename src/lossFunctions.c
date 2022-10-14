@@ -8,12 +8,10 @@
 
 double categoryCrossEntropy(double target[], double output[], int size){
     double result = 0.0f;
-    for (int i=0; i<size; i++) printf("%f,", log(output[i]));
-    printf("\n");
-    for (int i=0; i<size; i++) printf("%f,", target[i]);
-    printf("\n");
     for (int i=0; i<size;i++){
-        result += (target[i] * log(output[i]));
+        double tempOutput = output[i];
+        if (fabs(tempOutput) < 1e-6) tempOutput = 1e-10;
+        result += (target[i] * log(tempOutput));
     }
     return 0 - result;
 }
