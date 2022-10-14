@@ -24,13 +24,28 @@ double dRelu(double x) {
 double softmax(double arr[], int size){
     double totalExponential = 0;
     double exponential[size];
+    int exception = 0;
+    int maxIndex = 0;
+    double max = arr[0];
     for (int i=0; i < size; i++){
+        if (arr[i] >= max) {
+            max = arr[i];
+            maxIndex = i;
+        }
         double expResult = exp(arr[i]);
         exponential[i] = expResult;
         totalExponential += expResult;
     }
-    for (int i=0; i < size; i++){
-        arr[i] = exponential[i] / totalExponential;
+    if (isinf(totalExponential)) exception = 1;
+    if (exception){
+        for (int i=0; i < size; i++)arr[i] = 0.0f;
+        arr[maxIndex] = 1.0f;
+    }
+    else{
+        for (int i=0; i < size; i++){
+            double temp = exponential[i] / totalExponential;
+            arr[i] = temp;
+        }
     }
     return totalExponential;        
 }
