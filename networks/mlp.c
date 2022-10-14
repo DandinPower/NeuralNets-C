@@ -5,7 +5,7 @@
 #include <math.h>
 #include <time.h>
 #include <string.h>
-
+#define N 5000
 #define LEARNING_RATE 0.1
 #define EPOCHS 10000
 
@@ -33,8 +33,68 @@ double delta_3[DENSE_3_INPUT];
 double training_inputs[numTrainingSets][DENSE_1_INPUT];
 double training_outputs[numTrainingSets][DENSE_3_OUTPUT];
 
-void ReadTrain(){
-    
+//載入訓練集
+void ReadMnistData(){
+    FILE *fp;
+    char str[N + 1];
+    if ( (fp = fopen("networks/label.txt", "rt")) == NULL ) {
+        puts("Fail to open file!");
+        exit(0);
+    }
+    int i =0;
+    while( fgets(str, N, fp) != NULL ) {
+        const char* d = ",";
+        char *p;
+        p = strtok(str, d);
+        int j =0;
+        while (p != NULL) {
+            sscanf(p, "%lf", &training_outputs[i][j]);
+            p = strtok(NULL, d);		   
+            j++;
+        }
+        i++;
+    }
+    fclose(fp);
+    if ( (fp = fopen("networks/minist.txt", "rt")) == NULL ) {
+        puts("Fail to open file!");
+        exit(0);
+    }
+    i =0;
+    while( fgets(str, N, fp) != NULL ) {
+        const char* d = ",";
+        char *p;
+        p = strtok(str, d);
+        int j =0;
+        while (p != NULL) {
+            double temp;
+            sscanf(p, "%lf", &temp);
+            training_inputs[i][j] = temp/255;
+            p = strtok(NULL, d);		   
+            j++;
+        }
+        i++;
+    }
+    fclose(fp);
+}
+
+//印出one hot label
+void ShowLabel(){
+    for (int i=0;i<numTrainingSets;i++){
+        for (int j=0;j<DENSE_3_OUTPUT;j++){
+            printf("%f,",training_outputs[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+//印出mnist
+void ShowMnist(){
+    for (int i=0;i<numTrainingSets;i++){
+        for (int j=0;j<DENSE_1_INPUT;j++){
+            printf("%f,",training_inputs[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 //初始化DENSE_1參數
@@ -170,12 +230,17 @@ void Training(){
 }
 
 int main(void){
+    ReadMnistData();
     InitDense1Layer();
     InitDense2Layer();
     InitDense3Layer();
+    /*
+    
     for (int i=0; i<EPOCHS; i++){
         Training();
     }
     inference();
+    */
+    
     return 0;
 }
