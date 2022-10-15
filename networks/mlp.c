@@ -7,7 +7,7 @@
 #include <time.h>
 #include <string.h>
 #define N 5000
-#define LEARNING_RATE 0.01
+#define LEARNING_RATE 0.05
 #define EPOCHS 10000
 
 #define DENSE_1_INPUT 768
@@ -156,18 +156,16 @@ void inference(){
 //訓練epoch
 void Training(){
     //shuffle(trainingSetOrder,numTrainingSets);
-    //for (int i=0;i<60000;i++)printf("%d\n",trainingSetOrder[i]);
-    for (int x=0; x<20; x++) {
+    for (int x=3; x<10000; x++) {
         //int i = trainingSetOrder[x];
-        //printf("%dtest%d\n",x,i);
         double activation;
         for (int j=0; j<DENSE_1_OUTPUT; j++) {
             activation=dense_1_Bias[j];
             for (int k=0; k<DENSE_1_INPUT; k++) activation += training_inputs[x][k] * dense_1_Weights[k][j];
-            //for (int k=0; k<DENSE_1_INPUT; k++) activation += training_inputs[i][k];
+            //printf("%f,",activation);
             dense_1_output[j] = relu(activation);
         }
-        //for (int z=0; z <DENSE_1_OUTPUT; z++) printf("%f,",dense_1_output[z]);
+        //printf("\n");
         for (int j=0; j<DENSE_2_OUTPUT; j++) {
             activation=dense_2_Bias[j];
             for (int k=0; k<DENSE_2_INPUT; k++) {
@@ -175,7 +173,6 @@ void Training(){
             }
             dense_2_output[j] = relu(activation);
         }
-        //for (int z=0; z <DENSE_2_OUTPUT; z++) printf("%f,",dense_2_output[z]);
         for (int j=0; j<DENSE_3_OUTPUT; j++) {
             activation=dense_3_Bias[j];
             for (int k=0; k<DENSE_3_INPUT; k++) {
@@ -183,21 +180,20 @@ void Training(){
             }
             dense_3_output[j] = activation;
         }
-        //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
         double totalExponential = softmax(dense_3_output, DENSE_3_OUTPUT);
-        //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",dense_3_output[z]);
         double loss = categoryCrossEntropy(training_outputs[x], dense_3_output, DENSE_3_OUTPUT);
         if (x % PRINT_PERIOD == 0)printf("%f\n",loss);
         dCrossAndSoftmax(deltaCrossAndSoftmax, training_outputs[x], dense_3_output, DENSE_3_OUTPUT);
-        //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",deltaCrossAndSoftmax[z]);
-        for (int z=0; z <DENSE_3_OUTPUT; z++) {
-            deltaCrossAndSoftmax[z] = loss * deltaCrossAndSoftmax[z];
+        // Compute change
+        double delta_3[DENSE_3_OUTPUT];
+        for (int j=0; j<DENSE_3_OUTPUT; j++) {
+            double dError = loss * deltaCrossAndSoftmax[j];
+            delta_3[j] = dError*dense_3_output[j];
         }
-        //for (int z=0; z <DENSE_3_OUTPUT; z++) printf("%f,",deltaCrossAndSoftmax[z]);
         for (int j=0; j<DENSE_2_OUTPUT; j++) {
             double dError = 0.0f;
             for(int k=0; k<DENSE_3_OUTPUT; k++) {
-                dError+=deltaCrossAndSoftmax[k]*dense_3_Weights[j][k];
+                dError+=delta_3[k]*dense_3_Weights[j][k];
             }
             delta_2[j] = dError*dRelu(dense_2_output[j]);
         }
@@ -208,27 +204,23 @@ void Training(){
             }
             delta_1[j] = dError*dRelu(dense_1_output[j]);
         }
-        //for (int i=0; i<DENSE_3_OUTPUT;i++)printf("%f,",dense_3_Bias[i]);
-        //for (int i=0; i<DENSE_3_OUTPUT;i++)printf("%f,",deltaCrossAndSoftmax[i]);
-        // Apply change in dense_3 weights
+        // Apply change
         for (int j=0; j<DENSE_3_OUTPUT; j++) {
-            dense_3_Bias[j] += deltaCrossAndSoftmax[j] * LEARNING_RATE;
+            dense_3_Bias[j] -= delta_3[j] * LEARNING_RATE;
             for (int k=0; k<DENSE_2_OUTPUT; k++) {
-                dense_3_Weights[k][j] += dense_2_output[k] * deltaCrossAndSoftmax[j] * LEARNING_RATE;
+                dense_3_Weights[k][j] -= dense_2_output[k] * delta_3[j] * LEARNING_RATE;
             }
-        } 
-        // Apply change in dense_2 weights
+        }
         for (int j=0; j<DENSE_2_OUTPUT; j++) {
-            dense_2_Bias[j] += delta_2[j] * LEARNING_RATE;
+            dense_2_Bias[j] -= delta_2[j] * LEARNING_RATE;
             for (int k=0; k<DENSE_1_OUTPUT; k++) {
-                dense_2_Weights[k][j] += dense_1_output[k] * delta_2[j] * LEARNING_RATE;
+                dense_2_Weights[k][j] -= dense_1_output[k] * delta_2[j] * LEARNING_RATE;
             }
-        } 
-        // Apply change in dense_1 weights
+        }
         for (int j=0; j<DENSE_1_OUTPUT; j++) {
-            dense_1_Bias[j] += delta_1[j] * LEARNING_RATE;
+            dense_1_Bias[j] -= delta_1[j] * LEARNING_RATE;
             for (int k=0; k<DENSE_1_INPUT; k++) {
-                dense_1_Weights[k][j] += training_inputs[x][k] * delta_1[j] * LEARNING_RATE;
+                dense_1_Weights[k][j] -= training_inputs[x][k] * delta_1[j] * LEARNING_RATE;
             }
         }
     }
@@ -236,6 +228,8 @@ void Training(){
 
 int main(void){
     ReadMnistData();
+    //ShowLabel();
+    //ShowMnist();
     InitOrder(trainingSetOrder, numTrainingSets);
     InitDense1Layer();
     InitDense2Layer();

@@ -22,7 +22,7 @@ double GetRandomWeight() {
     double sign;
     if ((int)rand() % 2 == 1) sign = -1.0f;
     else sign = 1.0f;
-    return sign * ((double)rand())/((double)RAND_MAX); 
+    return sign * ((double)rand())/((double)RAND_MAX * 100); 
 }
 
 //初始化訓練order

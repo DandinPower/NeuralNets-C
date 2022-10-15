@@ -40,6 +40,7 @@ double softmax(double arr[], int size){
     if (exception){
         for (int i=0; i < size; i++)arr[i] = 0.0f;
         arr[maxIndex] = 1.0f;
+        printf("boom!\n");
     }
     else{
         for (int i=0; i < size; i++){
