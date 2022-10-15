@@ -81,6 +81,7 @@ void ResetLayerDelta(linearlayer_t *x){
 }
 
 void InitLayerNode(linearlayer_t *x){
+    // node_t *p = (node_t*)malloc(sizeof(node_t)* x->numInput);
     x->nodes = (node_t*)malloc(sizeof(node_t)* x->numInput);
 }
 
